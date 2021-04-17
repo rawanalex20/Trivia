@@ -42,7 +42,6 @@ class QuizView extends Component {
   handleChange = (event) => {
     this.setState({[event.target.name]: event.target.value})
   }
-
   getNextQuestion = () => {
     const previousQuestions = [...this.state.previousQuestions]
     if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
@@ -54,7 +53,7 @@ class QuizView extends Component {
       contentType: 'application/json',
       data: JSON.stringify({
         previous_questions: previousQuestions,
-        quiz_category: this.state.quizCategory
+        quiz_category: this.state.quizCategory.id
       }),
       xhrFields: {
         withCredentials: true
@@ -68,6 +67,7 @@ class QuizView extends Component {
           guess: '',
           forceEnd: result.question ? false : true
         })
+        
         return;
       },
       error: (error) => {
