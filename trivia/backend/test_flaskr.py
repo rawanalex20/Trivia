@@ -108,16 +108,18 @@ class TriviaTestCase(unittest.TestCase):
 
     # Deleting a question
     def test_delete(self):
-        res = self.client().delete('/questions/21')
+        questions = Question.query.all()
+        ids = [question.id for question in questions]
+        res = self.client().delete('/questions/' + str(ids[0]))
         data = json.loads(res.data)
-        question = Question.query.filter_by(id=21).one_or_none()
+        question = Question.query.filter_by(id=ids[0]).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(question, None)
         self.assertTrue(data['success'])
 
     # Errors deleting a question
-    def test_404_error_delete(self):
+    def test_error_delete(self):
         res = self.client().delete('/questions/1000')
         data = json.loads(res.data)
 
@@ -134,7 +136,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data["question"])
 
     # Errors in quizzes
-    def test_405_error_quiz(self):
+    def test_error_quiz(self):
         res = self.client().get('/quizzes')
         data = json.loads(res.data)
 
@@ -150,7 +152,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['questions'])
 
     # Error in questions based on category
-    def test_422_error_questions_in_category(self):
+    def test_error_questions_in_category(self):
         res = self.client().get('/categories/10')
         data = json.loads(res.data)
 
