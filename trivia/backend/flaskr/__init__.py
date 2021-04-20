@@ -43,12 +43,7 @@ def create_app(test_config=None):
     @app.route('/categories', methods=['GET'])
     def get_cat():
         try:
-            questions = Question.query.distinct(Question.category).all()
-            categories_ids = [question.category for question in questions]
-            categories = [
-              Category.query.filter_by(id=cat_id)[0]
-              .type for cat_id in categories_ids
-              ]
+            categories = [cat.type for cat in Category.query.all()]
             return jsonify({
               "success": True,
               "categories": categories
@@ -72,13 +67,7 @@ def create_app(test_config=None):
             questions = Question.query.all()
             paginated_questions, start, end = paginate(questions, request)
             questions_cat = Question.query.distinct(Question.category).all()
-            categories_ids = [
-              question.category for question in questions_cat[start:end]
-              ]
-            categories = [
-              Category.query.filter_by(id=cat_id)[0]
-              .type for cat_id in categories_ids
-              ]
+            categories = [cat.type for cat in Category.query.all()]
             if len(paginated_questions) == 0:
                 abort(404)
             else:
