@@ -211,9 +211,8 @@ def create_app(test_config=None):
             else:
                 category = int(category)
                 questions = Question.query.filter_by(category=category).all()
-                questionstemp = Question.query
-                .filter_by(category=category).all()
-            for question in questionstemp:
+                qtemp = Question.query.filter_by(category=category).all()
+            for question in qtemp:
                 if question.id in previous_questions:
                     questions.remove(question)
             if (len(questions) == 0):
