@@ -207,7 +207,7 @@ def create_app(test_config=None):
         try:
             if category == 0:
                 questions = Question.query.all()
-                questionstemp = Question.query.all()
+                qtemp = Question.query.all()
             else:
                 category = int(category)
                 questions = Question.query.filter_by(category=category).all()
