@@ -24,13 +24,12 @@ class TriviaTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
-        
-    
+
     def tearDown(self):
         """Executed after reach test"""
         pass
 
-    # Questions 
+    # Questions
     def test_get_questions(self):
         res = self.client().get('/questions')
         data = json.loads(res.data)
@@ -40,7 +39,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data["total questions"])
         self.assertTrue(len(data["questions"]))
 
-    # Error in questions 
+    # Error in questions
     def test_422_fail_get_questions(self):
         res = self.client().get('/questions?page=100')
         data = json.loads(res.data)
@@ -69,22 +68,22 @@ class TriviaTestCase(unittest.TestCase):
 
     # Adding a question
     def test_create_question(self):
-        res = self.client().post('/questions', json={'question': "Who built the pyramids?", 'answer': 'pharoahs', 'catogories': 4, 'difficulty': 3})
+        res = self.client().post('/questions', json={'question': "What sport was Jesse Owens involved in?", 'answer': 'Track and field', 'catogory': 6, 'difficulty': 3})
         data = json.loads(res.data)
         pass
 
     # Error adding a question
-    def test_500_fail_create_question(self):
+    def test_422_fail_create_question(self):
         res = self.client().post('/questions')
         data = json.loads(res.data)
-         
-        self.assertEqual(res.status_code, 500)
+
+        self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'internal server error')
+        self.assertEqual(data['message'], 'unprocessable')
 
     # Searching present questions
     def test_search_questions(self):
-        res = self.client().post('/search', json={'searchTerm': 'What'})
+        res = self.client().post('/search', json={'searchTerm': ''})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -92,13 +91,13 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['questions']))
 
     # Error searching questions
-    def test_500_error_search(self):
+    def test_422_error_search(self):
         res = self.client().post('/search')
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 500)
+        self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'internal server error')
+        self.assertEqual(data['message'], 'unprocessable')
 
     # Deleting a question
     def test_delete(self):
@@ -123,7 +122,7 @@ class TriviaTestCase(unittest.TestCase):
 
     # Quizzes
     def test_quiz(self):
-        res = self.client().post('/quizzes', json={'previous_questions': []})
+        res = self.client().post('/quizzes', json={'previous_questions': [], 'quiz_category': '1'})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
