@@ -35,7 +35,10 @@ class QuizView extends Component {
     })
   }
 
-  selectCategory = ({type, id=0}) => {
+  selectCategory = ({type, id=null}) => {
+    if (id == null){
+      id = -1
+    }
     this.setState({quizCategory: {type, id}}, this.getNextQuestion)
   }
 
@@ -45,7 +48,6 @@ class QuizView extends Component {
   getNextQuestion = () => {
     const previousQuestions = [...this.state.previousQuestions]
     if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
-
     $.ajax({
       url: '/quizzes', //TODO: update request URL
       type: "POST",
@@ -53,7 +55,7 @@ class QuizView extends Component {
       contentType: 'application/json',
       data: JSON.stringify({
         previous_questions: previousQuestions,
-        quiz_category: this.state.quizCategory.id
+        quiz_category: Number(this.state.quizCategory.id) + 1
       }),
       xhrFields: {
         withCredentials: true
