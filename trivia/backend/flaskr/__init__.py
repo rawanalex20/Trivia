@@ -111,6 +111,7 @@ def create_app(test_config=None):
     @app.route('/questions', methods=['POST'])
     def create_question():
         body = request.get_json()
+        print(body.get('category', None))
         question = Question(
           question=body.get('question', None),
           answer=body.get('answer', None),
@@ -204,15 +205,22 @@ def create_app(test_config=None):
         category = body.get('quiz_category', None)
         previous_questions = body.get('previous_questions', None)
         try:
-            if category is None:
+            if category == 0:
                 questions = Question.query.all()
+                questionstemp = Question.query.all()
             else:
-                category = int(category) + 1
+                category = int(category)
                 questions = Question.query.filter_by(category=category).all()
-            for question in questions:
+                questionstemp = Question.query
+                .filter_by(category=category).all()
+            for question in questionstemp:
                 if question.id in previous_questions:
                     questions.remove(question)
-            index = random.randrange(0, len(questions) - 1)
+            if (len(questions) == 0):
+                return jsonify({
+                  "success": True
+                })
+            index = random.randrange(0, len(questions))
             question = questions[index]
             return jsonify({
               "success": True,
