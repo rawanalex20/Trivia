@@ -110,15 +110,15 @@ def create_app(test_config=None):
     # of the questions list in the "List" tab.
     @app.route('/questions', methods=['POST'])
     def create_question():
-        body = request.get_json()
-        print(body.get('category', None))
-        question = Question(
-          question=body.get('question', None),
-          answer=body.get('answer', None),
-          category=body.get('category', None),
-          difficulty=body.get('difficulty', None)
-          )
         try:
+            body = request.get_json()
+            print(body.get('category', None))
+            question = Question(
+              question=body.get('question', None),
+              answer=body.get('answer', None),
+              category=body.get('category', None),
+              difficulty=body.get('difficulty', None)
+              )
             db.session.add(question)
             db.session.commit()
             return jsonify({
@@ -136,10 +136,10 @@ def create_app(test_config=None):
     # Try using the word "title" to start.
     @app.route('/search', methods=['POST'])
     def search_questions():
-        body = request.get_json()
-        search_term = body.get('searchTerm', None)
-        data = []
         try:
+            body = request.get_json()
+            search_term = body.get('searchTerm', None)
+            data = []
             questions = Question.query.filter(
               Question.question.like('%' + search_term + '%')).all()
             for question in questions:
